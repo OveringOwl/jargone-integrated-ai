@@ -1,5 +1,16 @@
 # JarGone - AI-Powered Text Simplification Extension
 
+
+<h3 align="center">Simplify complex jargon by translating it into clear, accessible language with a single click!</h3>
+
+<p align="center">
+    <a href="https://youtu.be/-e5QRBsvcAk">Demo</a>
+    ·  
+    <a href="https://github.com/OveringOwl/jargone-integrated-ai/releases">Download</a>
+</p>
+
+<h3 align="center"><img width="700" alt="app screenshots" src="./src/public/screenshots/cover.png"></h3>
+
 ## Overview
 
 JarGone is an AI-powered browser extension designed to simplify complex jargon and technical language by providing clear, accessible alternatives with a single click. This extension aims to improve accessibility for both non-native speakers and regular users who find web content filled with difficult and complex terminology, enhancing their understanding while promoting learning.
