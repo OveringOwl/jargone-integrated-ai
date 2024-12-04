@@ -46,27 +46,19 @@ export default defineBackground(() => {
         browser.tabs.sendMessage(tab.id, { type: 'CHANGE_CURSOR', state: 'waiting' });
 
         try {
-          // Send request to LLM
-          const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-              "model": 'gpt-4o-mini',
-              "messages": promptText,
-            }),
-          });
+          const { available, defaultTemperature, defaultTopK, maxTopK } = await ai.languageModel.capabilities();
 
-          const data = await response.json();
-          const result = data.choices[0]?.message?.content;
-          const cleanedResult = result.replace(/```json|```/g, '').trim();
-          const resultJson = JSON.parse(cleanedResult);
-          rewrittenText = resultJson.rewrittenText.trim();
+          if (available !== "no") {
+            const session = await ai.languageModel.create();
 
-          keywordArray = resultJson.keywords;
+            // Prompt the model and wait for the whole result to come back.
+            const result = await session.prompt(promptText);
+            const cleanedResult = result.replace(/```json|```/g, '').trim();
+            const resultJson = JSON.parse(cleanedResult);
+            rewrittenText = resultJson.rewrittenText.trim();
 
+            keywordArray = resultJson.keywords;
+          }
         } catch (error) {
           console.error('Error: ', error);
           keywordArray = [
@@ -122,30 +114,18 @@ export default defineBackground(() => {
         browser.tabs.sendMessage(tab.id, { type: 'CHANGE_CURSOR', state: 'waiting' });
 
         try {
-          // Send request to LLM
-          const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-              "model": 'gpt-4o-mini',
-              "messages": promptText,
-            }),
-          });
+          const { available, defaultTemperature, defaultTopK, maxTopK } = await ai.languageModel.capabilities();
 
-          console.warn(response);
+          if (available !== "no") {
+            const session = await ai.languageModel.create();
 
-          const data = await response.json();
-          console.warn(data);
-          const result = data.choices[0]?.message?.content;
-          const cleanedResult = result.replace(/```json|```/g, '').trim();
-          const resultJson = JSON.parse(cleanedResult);
+            // Prompt the model and wait for the whole result to come back.
+            const result = await session.prompt(promptText);
+            const cleanedResult = result.replace(/```json|```/g, '').trim();
+            const resultJson = JSON.parse(cleanedResult);
 
-          // Store result in local storage
-          keywordArray = resultJson.keywords;
-
+            keywordArray = resultJson.keywords;
+          }
         } catch (error) {
           console.error('Error: ', error);
           const cleanedText = selectedText.replace(/^[.,\s]+|[.,\s]+$/g, '');
